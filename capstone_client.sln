@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsApp1", "WindowsFormsApp1\WindowsFormsApp1.csproj", "{AD794F7F-D546-454D-9B77-93BBE174762E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "capstone_Client", "WindowsFormsApp1\capstone_Client.csproj", "{AD794F7F-D546-454D-9B77-93BBE174762E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
