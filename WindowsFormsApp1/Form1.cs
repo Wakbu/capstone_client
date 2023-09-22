@@ -15,11 +15,12 @@ namespace WindowsFormsApp1
         public Form1()
         {
             InitializeComponent();
+            ConnSocket socket = new ConnSocket();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Console.WriteLine("");
+
         }
     }
 }
