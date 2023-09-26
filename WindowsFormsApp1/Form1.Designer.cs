@@ -1,6 +1,6 @@
 ﻿namespace WindowsFormsApp1
 {
-    partial class Form1
+    partial class clientMainForm
     {
         /// <summary>
         /// 필수 디자이너 변수입니다.
@@ -39,14 +39,14 @@
             this.sltTable = new System.Windows.Forms.TableLayoutPanel();
             this.prsList = new System.Windows.Forms.TreeView();
             this.cnfTable = new System.Windows.Forms.TableLayoutPanel();
-            this.crtButton = new MetroFramework.Controls.MetroButton();
-            this.edtButton = new MetroFramework.Controls.MetroButton();
             this.cnfButton = new MetroFramework.Controls.MetroButton();
+            this.edtButton = new MetroFramework.Controls.MetroButton();
+            this.crtButton = new MetroFramework.Controls.MetroButton();
             this.docSplit = new System.Windows.Forms.SplitContainer();
             this.contTable = new System.Windows.Forms.TableLayoutPanel();
             this.imgLabel = new MetroFramework.Controls.MetroLabel();
-            this.etcLabel = new MetroFramework.Controls.MetroLabel();
             this.contLabel = new MetroFramework.Controls.MetroLabel();
+            this.etcLabel = new MetroFramework.Controls.MetroLabel();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitCon)).BeginInit();
             this.mainSplitCon.Panel1.SuspendLayout();
             this.mainSplitCon.Panel2.SuspendLayout();
@@ -141,15 +141,15 @@
             this.cnfTable.Size = new System.Drawing.Size(194, 88);
             this.cnfTable.TabIndex = 1;
             // 
-            // crtButton
+            // cnfButton
             // 
-            this.crtButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.crtButton.Location = new System.Drawing.Point(3, 3);
-            this.crtButton.Name = "crtButton";
-            this.crtButton.Size = new System.Drawing.Size(58, 82);
-            this.crtButton.TabIndex = 0;
-            this.crtButton.Text = "데이터추가";
-            this.crtButton.UseSelectable = true;
+            this.cnfButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cnfButton.Location = new System.Drawing.Point(131, 3);
+            this.cnfButton.Name = "cnfButton";
+            this.cnfButton.Size = new System.Drawing.Size(60, 82);
+            this.cnfButton.TabIndex = 2;
+            this.cnfButton.Text = "환경설정";
+            this.cnfButton.UseSelectable = true;
             // 
             // edtButton
             // 
@@ -161,15 +161,15 @@
             this.edtButton.Text = "데이터수정";
             this.edtButton.UseSelectable = true;
             // 
-            // cnfButton
+            // crtButton
             // 
-            this.cnfButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cnfButton.Location = new System.Drawing.Point(131, 3);
-            this.cnfButton.Name = "cnfButton";
-            this.cnfButton.Size = new System.Drawing.Size(60, 82);
-            this.cnfButton.TabIndex = 2;
-            this.cnfButton.Text = "환경설정";
-            this.cnfButton.UseSelectable = true;
+            this.crtButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.crtButton.Location = new System.Drawing.Point(3, 3);
+            this.crtButton.Name = "crtButton";
+            this.crtButton.Size = new System.Drawing.Size(58, 82);
+            this.crtButton.TabIndex = 0;
+            this.crtButton.Text = "데이터추가";
+            this.crtButton.UseSelectable = true;
             // 
             // docSplit
             // 
@@ -214,15 +214,6 @@
             this.imgLabel.TabIndex = 0;
             this.imgLabel.Text = "이미지라벨";
             // 
-            // etcLabel
-            // 
-            this.etcLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.etcLabel.Location = new System.Drawing.Point(0, 0);
-            this.etcLabel.Name = "etcLabel";
-            this.etcLabel.Size = new System.Drawing.Size(756, 96);
-            this.etcLabel.TabIndex = 0;
-            this.etcLabel.Text = "기타 정보 라벨";
-            // 
             // contLabel
             // 
             this.contLabel.AutoSize = true;
@@ -233,11 +224,20 @@
             this.contLabel.TabIndex = 1;
             this.contLabel.Text = "글 라벨";
             // 
-            // Form1
+            // etcLabel
+            // 
+            this.etcLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.etcLabel.Location = new System.Drawing.Point(0, 0);
+            this.etcLabel.Name = "etcLabel";
+            this.etcLabel.Size = new System.Drawing.Size(756, 96);
+            this.etcLabel.TabIndex = 0;
+            this.etcLabel.Text = "기타 정보 라벨";
+            // 
+            // clientMainForm
             // 
             this.ClientSize = new System.Drawing.Size(1000, 550);
             this.Controls.Add(this.mainSplitCon);
-            this.Name = "Form1";
+            this.Name = "clientMainForm";
             this.Text = "PersonageWIKI";
             this.mainSplitCon.Panel1.ResumeLayout(false);
             this.mainSplitCon.Panel2.ResumeLayout(false);

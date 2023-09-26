@@ -8,19 +8,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WindowsFormsApp1
+namespace capstone_Server
 {
-    public partial class clientMainForm : MetroFramework.Forms.MetroForm
+    public partial class serverMainForm : Form
     {
-        public clientMainForm()
+        public serverMainForm()
         {
             InitializeComponent();
-            ConnSocket socket = new ConnSocket();
+            createSocket serverCreate = new createSocket();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void serverMainForm_Load(object sender, EventArgs e)
         {
-
+            
         }
     }
 }

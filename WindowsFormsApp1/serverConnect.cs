@@ -19,15 +19,24 @@ namespace WindowsFormsApp1
 
             try
             {
-                // 소켓 객체 생성(TCP 프로토콜 사용)
-                Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                TcpClient client = new TcpClient();
 
-                // 서버에 연결
-                var ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 7000);
-                socket.Connect(ep);
-            }catch (SocketException ex)
+                // 첫번째 매개변수는 접속할 IP
+                // 서버가 내 PC에서 돌아가므로 127.0.0.1(자기자신을 나타내는 루프백IP)
+                // 두번째 매개변수는 서버에서 설정한 포트번호 를 입력해줍니다.
+                client.Connect("192.168.219.102", 7000);
+
+                // "클라이언트 : 접속합니다" 를 stream으로 보내기 위해 byte[]형으로 바꿔줍니다.
+                byte[] buf = Encoding.Default.GetBytes("클라이언트 : 접속합니다");
+
+                // 서버에서 Read하는 방식과 비슷한 형식으로 Wirte 시켜줍니다.
+                client.GetStream().Write(buf, 0, buf.Length);
+
+                client.Close();
+            }
+            catch (SocketException ex)
             {
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show(ex.Message);
             }
         }
     }
