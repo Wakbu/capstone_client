@@ -12,15 +12,21 @@ namespace capstone_Server
 {
     public partial class serverMainForm : Form
     {
+        public static serverMainForm serverMain;
         public serverMainForm()
         {
             InitializeComponent();
-            createSocket serverCreate = new createSocket();
+            serverMain = this;
         }
 
         private void serverMainForm_Load(object sender, EventArgs e)
         {
-            
+            createSocket serverCreate = new createSocket();
+        }
+
+        private void logTBox_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
