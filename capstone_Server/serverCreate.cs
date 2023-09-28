@@ -9,6 +9,8 @@ using System.Windows.Forms;
 using System.Threading;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Drawing;
+using System.IO;
+using Oracle.ManagedDataAccess;
 
 namespace capstone_Server
 {
@@ -17,40 +19,80 @@ namespace capstone_Server
 
     }
 
-    class createSocket
+    class createServer
     {
-        private Socket mainsock;
-        List<Socket> connectedClients = new List<Socket>();
+        const int size = 1024;
+        TcpListener listener;
 
-        private int size = 1024;
-        private byte[] data = new byte[1024];
+        public createServer()
+        {
+            AsyncEchoServer();
+        }
 
-        public createSocket()
+        async public Task AsyncEchoServer()
         {
             try
             {
-                //소켓을 생성한다
-                mainsock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                //목적지를 정해준다
-                IPEndPoint serverEP = new IPEndPoint(IPAddress.Any, 7000);
-                //목적지와 묶어준다
-                mainsock.Bind(serverEP);
-                //받아들이기 시작한다 (최대 10개의 Client까지)
-                mainsock.Listen(10);
-                //연결시도가 감지되면 AcceptCallBack으로 이동하게 설정
-                mainsock.BeginAccept(AcceptCallBack, null);
-            }
-            catch (Exception e)
-            {
-            }
 
-            void AcceptCallBack(IAsyncResult ar)
-            {
-                Socket client = mainsock.EndAccept(ar);
+                string dns = "capproject.kro.kr";
+                IPAddress bnetServerIP = Dns.GetHostAddresses(dns)[0];
 
+                //TCP Server를 생성한다
+                listener = new TcpListener(bnetServerIP, 7000);
+                listener.Start();
+                serverMainForm.serverMain.logTBox.AppendText("클라이언트 Accept Listener 실행중...\r\n");
+
+                // 서버 시작 버튼 비활성화, 서버 종료 버튼 활성화
+                serverMainForm.serverMain.serverStartBtn.Enabled = false;
+                serverMainForm.serverMain.serverStopBtn.Enabled = true;
+
+                while (true) {
+
+                    // 클라이언트 비동기 Accept(클라이언트 수신)
+                    TcpClient clientSock = await listener.AcceptTcpClientAsync().ConfigureAwait(false);
+
+                    // 새 쓰레드에서 처리
+                    Task.Factory.StartNew(AsyncTcpProcess, clientSock);
+                }
+            }
+            catch (SocketException e)
+            {
+                serverMainForm.serverMain.logTBox.AppendText(e.ToString() + "\r\n");
             }
         }
 
+        TcpClient tc;
+        NetworkStream stream;
 
+        async public void AsyncTcpProcess(object o)
+        {
+            tc = (TcpClient)o;
+
+            stream = tc.GetStream();
+
+            // 비동기 수신
+            var buff = new byte[size];
+            var nbytes = await stream.ReadAsync(buff, 0, buff.Length).ConfigureAwait(false);
+
+            if(nbytes > 0)
+            {
+                string msg = Encoding.ASCII.GetString(buff, 0, nbytes);
+                serverMainForm.serverMain.logTBox.AppendText(msg+ "\r\n");
+
+                // 비동기 송신
+                await stream.WriteAsync(buff, 0, nbytes).ConfigureAwait(false);
+            }
+        }
+
+        public void serverStop()
+        {
+            listener.Stop();
+            serverMainForm.serverMain.logTBox.AppendText("통신 종료\r\n");
+
+            // 서버 시작 버튼 재활성화, 서버 종료 버튼 비활성화
+            serverMainForm.serverMain.serverStartBtn.Enabled = true;
+            serverMainForm.serverMain.serverStopBtn.Enabled = false;
+        }
     }
+
 }

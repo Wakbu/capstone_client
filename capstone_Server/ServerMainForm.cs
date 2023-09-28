@@ -13,6 +13,8 @@ namespace capstone_Server
     public partial class serverMainForm : Form
     {
         public static serverMainForm serverMain;
+        createServer serverCreate;
+
         public serverMainForm()
         {
             InitializeComponent();
@@ -21,12 +23,22 @@ namespace capstone_Server
 
         private void serverMainForm_Load(object sender, EventArgs e)
         {
-            createSocket serverCreate = new createSocket();
+            
         }
 
         private void logTBox_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void serverStartBtn_Click(object sender, EventArgs e)
+        {
+            serverCreate = new createServer();
+        }
+
+        private void serverStopBtn_Click(object sender, EventArgs e)
+        {
+            serverCreate.serverStop();
         }
     }
 }

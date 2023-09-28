@@ -10,15 +10,14 @@ using System.Windows.Forms;
 
 namespace WindowsFormsApp1
 {
-    public partial class clientMainForm : MetroFramework.Forms.MetroForm
+    public partial class CreateDataForm : MetroFramework.Forms.MetroForm
     {
-        public clientMainForm()
+        public CreateDataForm()
         {
             InitializeComponent();
-            ConnSocket socket = new ConnSocket();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void CreateDataForm_Load(object sender, EventArgs e)
         {
 
         }
