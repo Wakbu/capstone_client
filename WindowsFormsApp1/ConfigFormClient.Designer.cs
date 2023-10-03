@@ -1,6 +1,6 @@
-﻿namespace WindowsFormsApp1
+﻿namespace capstone_client
 {
-    partial class ConfigForm
+    partial class ConfigFormClient
     {
         /// <summary>
         /// Required designer variable.

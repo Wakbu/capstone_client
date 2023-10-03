@@ -33,8 +33,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.logTBox = new System.Windows.Forms.TextBox();
             this.confTablePanel = new System.Windows.Forms.TableLayoutPanel();
-            this.serverStartBtn = new System.Windows.Forms.Button();
             this.serverStopBtn = new System.Windows.Forms.Button();
+            this.serverStartBtn = new System.Windows.Forms.Button();
+            this.UserListButton = new System.Windows.Forms.Button();
             this.serverMainTable.SuspendLayout();
             this.contTablePanel.SuspendLayout();
             this.confTablePanel.SuspendLayout();
@@ -104,6 +105,7 @@
             this.confTablePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.confTablePanel.Controls.Add(this.serverStopBtn, 0, 1);
             this.confTablePanel.Controls.Add(this.serverStartBtn, 0, 0);
+            this.confTablePanel.Controls.Add(this.UserListButton, 0, 2);
             this.confTablePanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.confTablePanel.Location = new System.Drawing.Point(643, 3);
             this.confTablePanel.Name = "confTablePanel";
@@ -113,8 +115,21 @@
             this.confTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.confTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.confTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.confTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.confTablePanel.Size = new System.Drawing.Size(154, 444);
             this.confTablePanel.TabIndex = 1;
+            // 
+            // serverStopBtn
+            // 
+            this.serverStopBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.serverStopBtn.Enabled = false;
+            this.serverStopBtn.Location = new System.Drawing.Point(3, 91);
+            this.serverStopBtn.Name = "serverStopBtn";
+            this.serverStopBtn.Size = new System.Drawing.Size(148, 82);
+            this.serverStopBtn.TabIndex = 1;
+            this.serverStopBtn.Text = "Server Stop";
+            this.serverStopBtn.UseVisualStyleBackColor = true;
+            this.serverStopBtn.Click += new System.EventHandler(this.serverStopBtn_Click);
             // 
             // serverStartBtn
             // 
@@ -127,16 +142,17 @@
             this.serverStartBtn.UseVisualStyleBackColor = true;
             this.serverStartBtn.Click += new System.EventHandler(this.serverStartBtn_Click);
             // 
-            // serverStopBtn
+            // UserListButton
             // 
-            this.serverStopBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.serverStopBtn.Location = new System.Drawing.Point(3, 91);
-            this.serverStopBtn.Name = "serverStopBtn";
-            this.serverStopBtn.Size = new System.Drawing.Size(148, 82);
-            this.serverStopBtn.TabIndex = 1;
-            this.serverStopBtn.Text = "Server Stop";
-            this.serverStopBtn.UseVisualStyleBackColor = true;
-            this.serverStopBtn.Click += new System.EventHandler(this.serverStopBtn_Click);
+            this.UserListButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.UserListButton.Enabled = false;
+            this.UserListButton.Location = new System.Drawing.Point(3, 179);
+            this.UserListButton.Name = "UserListButton";
+            this.UserListButton.Size = new System.Drawing.Size(148, 82);
+            this.UserListButton.TabIndex = 2;
+            this.UserListButton.Text = "Connected User List";
+            this.UserListButton.UseVisualStyleBackColor = true;
+            this.UserListButton.Click += new System.EventHandler(this.UserListButton_Click);
             // 
             // serverMainForm
             // 
@@ -164,6 +180,7 @@
         private System.Windows.Forms.TableLayoutPanel confTablePanel;
         public System.Windows.Forms.Button serverStartBtn;
         public System.Windows.Forms.Button serverStopBtn;
+        public System.Windows.Forms.Button UserListButton;
     }
 }
 

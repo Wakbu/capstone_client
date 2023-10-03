@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Oracle.ManagedDataAccess.Client;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Oracle.ManagedDataAccess;
-using Oracle.ManagedDataAccess.Client;
 
 namespace capstone_Server
 {
@@ -31,8 +25,9 @@ namespace capstone_Server
                     conn.Open();
                 }
             }
-            catch(SqlException e) { 
-                serverMainForm.serverMain.logTBox.AppendText(e.Message+"\r\n");
+            catch (SqlException e)
+            {
+                serverMainForm.serverMain.logTBox.AppendText(e.Message + "\r\n");
             }
         }
 
@@ -43,9 +38,10 @@ namespace capstone_Server
             try
             {
                 OracleCommand oc = new OracleCommand(sql, conn);
-            } catch(SqlException e)
+            }
+            catch (SqlException e)
             {
-
+                serverMainForm.serverMain.logTBox.AppendText(e.ToString() + "\r\n");
             }
 
             return sqlValue;

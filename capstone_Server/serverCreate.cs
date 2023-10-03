@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using System.Net.Sockets;
-using System.Net;
-using System.Windows.Forms;
-using System.Threading;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using System.Drawing;
-using System.IO;
 using Oracle.ManagedDataAccess;
 
 namespace capstone_Server
@@ -23,6 +17,13 @@ namespace capstone_Server
     {
         const int size = 1024;
         TcpListener listener;
+        TcpClient tc;
+        NetworkStream stream;
+
+        List<string> userID = new List<string>();
+        List<string> userIP = new List<string>();
+        List<string> userStat = new List<string>();
+        int userCount = 0;
 
         public createServer()
         {
@@ -45,8 +46,10 @@ namespace capstone_Server
                 // 서버 시작 버튼 비활성화, 서버 종료 버튼 활성화
                 serverMainForm.serverMain.serverStartBtn.Enabled = false;
                 serverMainForm.serverMain.serverStopBtn.Enabled = true;
+                serverMainForm.serverMain.UserListButton.Enabled = true;
 
-                while (true) {
+                while (true)
+                {
 
                     // 클라이언트 비동기 Accept(클라이언트 수신)
                     TcpClient clientSock = await listener.AcceptTcpClientAsync().ConfigureAwait(false);
@@ -61,26 +64,37 @@ namespace capstone_Server
             }
         }
 
-        TcpClient tc;
-        NetworkStream stream;
-
         async public void AsyncTcpProcess(object o)
         {
-            tc = (TcpClient)o;
-
-            stream = tc.GetStream();
-
-            // 비동기 수신
-            var buff = new byte[size];
-            var nbytes = await stream.ReadAsync(buff, 0, buff.Length).ConfigureAwait(false);
-
-            if(nbytes > 0)
+            try
             {
-                string msg = Encoding.ASCII.GetString(buff, 0, nbytes);
-                serverMainForm.serverMain.logTBox.AppendText(msg+ "\r\n");
+                tc = (TcpClient)o;
+                serverMainForm.serverMain.logTBox.AppendText(tc.Client.LocalEndPoint.ToString() + " 유저가 접속했습니다.\r\n");
 
-                // 비동기 송신
-                await stream.WriteAsync(buff, 0, nbytes).ConfigureAwait(false);
+                // 유저정보 저장
+                userID.Add(userCount.ToString());
+                userIP.Add(tc.Client.LocalEndPoint.ToString());
+                userCount++;
+
+                // 통신을 통해 받아올 데이터를 불러오는 stream객체
+                stream = tc.GetStream();
+
+                // 비동기 수신
+                var buff = new byte[size];
+                var nbytes = await stream.ReadAsync(buff, 0, buff.Length).ConfigureAwait(false);
+
+                if (nbytes > 0)
+                {
+                    string msg = Encoding.ASCII.GetString(buff, 0, nbytes);
+                    serverMainForm.serverMain.logTBox.AppendText(msg + "\r\n");
+
+                    // 비동기 송신
+                    await stream.WriteAsync(buff, 0, nbytes).ConfigureAwait(false);
+                }
+            }
+            catch (Exception e)
+            {
+                serverMainForm.serverMain.logTBox.AppendText(e.ToString() + "\r\n");
             }
         }
 
@@ -92,6 +106,20 @@ namespace capstone_Server
             // 서버 시작 버튼 재활성화, 서버 종료 버튼 비활성화
             serverMainForm.serverMain.serverStartBtn.Enabled = true;
             serverMainForm.serverMain.serverStopBtn.Enabled = false;
+            serverMainForm.serverMain.UserListButton.Enabled = false;
+        }
+
+        public List<string> UserIdSend()
+        {
+            return userID;
+        }
+        public List<string> UserIPSend()
+        {
+            return userIP;
+        }
+        public List<string> UserStatSend()
+        {
+            return userStat;
         }
     }
 

@@ -1,4 +1,4 @@
-﻿namespace WindowsFormsApp1
+﻿namespace capstone_client
 {
     partial class clientMainForm
     {
@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("철학자");
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("문학자");
-            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("과학자");
-            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("의학자");
-            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("화학자");
-            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("사회봉사자");
-            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("종교인");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("철학자");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("문학자");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("과학자");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("의학자");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("화학자");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("사회봉사자");
+            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("종교인");
             this.mainSplitCon = new System.Windows.Forms.SplitContainer();
             this.sltTable = new System.Windows.Forms.TableLayoutPanel();
             this.prsList = new System.Windows.Forms.TreeView();
@@ -99,28 +99,28 @@
             this.prsList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.prsList.Location = new System.Drawing.Point(3, 3);
             this.prsList.Name = "prsList";
-            treeNode8.Name = "phsNode";
-            treeNode8.Text = "철학자";
-            treeNode9.Name = "ltrNode";
-            treeNode9.Text = "문학자";
-            treeNode10.Name = "sctNode";
-            treeNode10.Text = "과학자";
-            treeNode11.Name = "medNode";
-            treeNode11.Text = "의학자";
-            treeNode12.Name = "chtNode";
-            treeNode12.Text = "화학자";
-            treeNode13.Name = "votNode";
-            treeNode13.Text = "사회봉사자";
-            treeNode14.Name = "regNode";
-            treeNode14.Text = "종교인";
+            treeNode1.Name = "phsNode";
+            treeNode1.Text = "철학자";
+            treeNode2.Name = "ltrNode";
+            treeNode2.Text = "문학자";
+            treeNode3.Name = "sctNode";
+            treeNode3.Text = "과학자";
+            treeNode4.Name = "medNode";
+            treeNode4.Text = "의학자";
+            treeNode5.Name = "chtNode";
+            treeNode5.Text = "화학자";
+            treeNode6.Name = "votNode";
+            treeNode6.Text = "사회봉사자";
+            treeNode7.Name = "regNode";
+            treeNode7.Text = "종교인";
             this.prsList.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode8,
-            treeNode9,
-            treeNode10,
-            treeNode11,
-            treeNode12,
-            treeNode13,
-            treeNode14});
+            treeNode1,
+            treeNode2,
+            treeNode3,
+            treeNode4,
+            treeNode5,
+            treeNode6,
+            treeNode7});
             this.prsList.Size = new System.Drawing.Size(194, 370);
             this.prsList.TabIndex = 0;
             // 
@@ -159,7 +159,7 @@
             this.edtButton.Name = "edtButton";
             this.edtButton.Size = new System.Drawing.Size(58, 82);
             this.edtButton.TabIndex = 1;
-            this.edtButton.Text = "데이터수정";
+            this.edtButton.Text = "수정";
             this.edtButton.UseSelectable = true;
             this.edtButton.Click += new System.EventHandler(this.edtButton_Click);
             // 
@@ -170,7 +170,7 @@
             this.crtButton.Name = "crtButton";
             this.crtButton.Size = new System.Drawing.Size(58, 82);
             this.crtButton.TabIndex = 0;
-            this.crtButton.Text = "데이터추가";
+            this.crtButton.Text = "추가";
             this.crtButton.UseSelectable = true;
             this.crtButton.Click += new System.EventHandler(this.crtButton_Click);
             // 

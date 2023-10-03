@@ -1,4 +1,4 @@
-﻿namespace WindowsFormsApp1
+﻿namespace capstone_client
 {
     partial class CreateDataForm
     {
