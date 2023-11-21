@@ -1,5 +1,12 @@
-﻿using Oracle.ManagedDataAccess.Client;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
+using Google.Protobuf.WellKnownTypes;
+using MySql.Data.MySqlClient;
+using Microsoft.Data.Analysis;
+using Apache.Arrow;
+using System.Collections;
+using System.Collections.Generic;
+using System.Security;
+using System.Windows.Forms;
 
 namespace capstone_Server
 {
@@ -9,21 +16,26 @@ namespace capstone_Server
 
     class DBConnection
     {
-        private static string _connectionString =
-                "Data Source = (DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521)) (CONNECT_DATA = (SERVER = DEDICATED) (SERVICE_NAME = orcl)));" +
-                "User id = SYSTEM" +
-                "Password = 1234";
-        private OracleConnection conn;
+        MySqlConnection conn = new MySqlConnection("Server=localhost;Port=3306;Database=capstone;Uid=root;Pwd=1234");
+        MySqlCommand oc = null;
+        MySqlDataReader data = null;
 
-        public DBConnection()
+        List<string> name = new List<string>();          // 이름
+        List<string> category = new List<string>();
+        List<string> nation = new List<string>();        // 국가
+        List<string> time = new List<string>();          // 생몰년도
+        List<string> achievement = new List<string>();   // 업적
+        List<string> story = new List<string>();         // 뒷배경
+        List<string> tell = new List<string>();          // 기타사항
+        DataFrame sqlValue = null;
+
+        public DBConnection(string sql)
         {
             try
             {
-                if (conn == null)
-                {
-                    conn = new OracleConnection(_connectionString);
-                    conn.Open();
-                }
+                conn.Open();
+                oc = new MySqlCommand(sql, conn);
+                data = oc.ExecuteReader();
             }
             catch (SqlException e)
             {
@@ -31,20 +43,50 @@ namespace capstone_Server
             }
         }
 
-        private string sqlValueControl(OracleConnection conn, string sql)
+        public DataFrame defaultNameReceive()
         {
-            string sqlValue = null;
 
             try
             {
-                OracleCommand oc = new OracleCommand(sql, conn);
+                while(data.Read())
+                {
+                    name.Add(data["name"].ToString());
+                    category.Add(data["category"].ToString());
+                }
+                DataFrameColumn[] sqlColumns = {
+                    new StringDataFrameColumn("category", category),
+                    new StringDataFrameColumn("name", name)
+                };
+                sqlValue = new DataFrame(sqlColumns);
             }
             catch (SqlException e)
             {
                 serverMainForm.serverMain.logTBox.AppendText(e.ToString() + "\r\n");
             }
-
             return sqlValue;
+        }
+
+        public string defaultStoryReceive()
+        {
+            string story = null;
+            try
+            {
+                while (data.Read())
+                {
+                    story = data["story"].ToString();
+                }
+            }
+            catch (SqlException e)
+            {
+                serverMainForm.serverMain.logTBox.AppendText(e.ToString() + "\r\n");
+            }
+            return story;
+        }
+
+        public void closeAction()
+        {
+            conn.Close();
+            data.Close();
         }
     }
 }

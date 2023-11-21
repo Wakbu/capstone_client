@@ -39,14 +39,12 @@ namespace capstone_Server
         {
             UserListForm userListForm = new UserListForm();
 
-            userListForm.UserID = serverCreate.UserIdSend();
-            userListForm.UserIP = serverCreate.UserIPSend();
-            userListForm.UserStat = serverCreate.UserStatSend();
+            userListForm.userInfo = serverCreate.UserInfoSend();
 
-            for(int i=0; i<userListForm.UserID.Count; i++)
+            foreach(int i in userListForm.userInfo.Keys)
             {
-                ListViewItem item = new ListViewItem(userListForm.UserID[i]);
-                item.SubItems.Add(userListForm.UserIP[i]);
+                ListViewItem item = new ListViewItem(i.ToString());
+                item.SubItems.Add(userListForm.userInfo[i]);
 
                 userListForm.userListView.Items.Add(item);
             }

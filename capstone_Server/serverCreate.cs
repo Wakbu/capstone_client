@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using Oracle.ManagedDataAccess;
+using System.Windows.Forms;
+using Microsoft.Data.Analysis;
+using Microsoft.ML.Data;
+using MySqlX.XDevAPI;
+using Org.BouncyCastle.Ocsp;
 
 namespace capstone_Server
 {
@@ -15,15 +20,18 @@ namespace capstone_Server
 
     class createServer
     {
-        const int size = 1024;
+        const int size = 100000;
         TcpListener listener;
         TcpClient tc;
         NetworkStream stream;
+        DBConnection conn;
 
-        List<string> userID = new List<string>();
-        List<string> userIP = new List<string>();
-        List<string> userStat = new List<string>();
+        Dictionary<int, string> userInfo = new Dictionary<int, string>();
         int userCount = 0;
+        int userFindIndex = 0;
+
+        DataFrame defaultSqlValue_df = null;
+        string defaultSqlValue_str = null;
 
         public createServer()
         {
@@ -34,12 +42,12 @@ namespace capstone_Server
         {
             try
             {
-
-                string dns = "capproject.kro.kr";
-                IPAddress bnetServerIP = Dns.GetHostAddresses(dns)[0];
+                // 도메인 서버 접속용 아이피 할당 변수
+                //string dns = "capproject.kro.kr";
+                //IPAddress bnetServerIP = Dns.GetHostAddresses(dns)[0];
 
                 //TCP Server를 생성한다
-                listener = new TcpListener(bnetServerIP, 7000);
+                listener = new TcpListener(IPAddress.Any, 7000);
                 listener.Start();
                 serverMainForm.serverMain.logTBox.AppendText("클라이언트 Accept Listener 실행중...\r\n");
 
@@ -56,6 +64,7 @@ namespace capstone_Server
 
                     // 새 쓰레드에서 처리
                     Task.Factory.StartNew(AsyncTcpProcess, clientSock);
+                    serverMainForm.serverMain.logTBox.AppendText(clientSock.Client.LocalEndPoint.ToString() + " 유저가 접속했습니다.\r\n");
                 }
             }
             catch (SocketException e)
@@ -66,41 +75,94 @@ namespace capstone_Server
 
         async public void AsyncTcpProcess(object o)
         {
-            try
+            tc = (TcpClient)o;
+            
+
+            while (tc.Connected)
             {
-                tc = (TcpClient)o;
-                serverMainForm.serverMain.logTBox.AppendText(tc.Client.LocalEndPoint.ToString() + " 유저가 접속했습니다.\r\n");
-
-                // 유저정보 저장
-                userID.Add(userCount.ToString());
-                userIP.Add(tc.Client.LocalEndPoint.ToString());
-                userCount++;
-
-                // 통신을 통해 받아올 데이터를 불러오는 stream객체
-                stream = tc.GetStream();
-
-                // 비동기 수신
-                var buff = new byte[size];
-                var nbytes = await stream.ReadAsync(buff, 0, buff.Length).ConfigureAwait(false);
-
-                if (nbytes > 0)
+                try
                 {
-                    string msg = Encoding.ASCII.GetString(buff, 0, nbytes);
-                    serverMainForm.serverMain.logTBox.AppendText(msg + "\r\n");
+                    // 유저정보 저장
+                    int dupleUserCount = userInfo.Count;
+                    if (dupleUserCount == 0)
+                    {
+                        userInfo.Add(userCount, tc.Client.LocalEndPoint.ToString());
+                        userFindIndex = userCount;
+                        userCount++;
+                    }
+                    else if (userInfo[dupleUserCount - 1] != tc.Client.LocalEndPoint.ToString())
+                    {
+                        userInfo.Add(userCount, tc.Client.LocalEndPoint.ToString());
+                        userFindIndex = userCount;
+                        userCount++;
+                    }
 
-                    // 비동기 송신
-                    await stream.WriteAsync(buff, 0, nbytes).ConfigureAwait(false);
+                    // 통신을 통해 받아올 데이터를 불러오는 stream객체
+                    stream = tc.GetStream();
+
+                    var buff = new byte[size];
+                    var nbytes = 0;
+
+                    serverMainForm.serverMain.logTBox.AppendText(tc.Client.LocalEndPoint + "데이터 처리중..." + "\r\n");
+
+                    if (nbytes == 0)
+                    {
+                        nbytes = await stream.ReadAsync(buff, 0, buff.Length).ConfigureAwait(false);
+
+                        // 기본제공데이터 저장 string 변수
+                        string sql = Encoding.UTF8.GetString(buff, 0, nbytes);
+                        // 기본 DB 데이터 클라이언트에 제공하기위한 DB 컨넥션 객체
+                        conn = new DBConnection(sql);
+
+                        byte[] buffer = null;
+                        if (sql.Contains("cate"))
+                        {
+                            defaultSqlValue_df = conn.defaultNameReceive();
+                            buffer = Encoding.UTF8.GetBytes(defaultSqlValue_df.ToString());
+                        }
+                        else if (sql.Contains("story"))
+                        {
+                            defaultSqlValue_str = conn.defaultStoryReceive();
+                            buffer = Encoding.UTF8.GetBytes(defaultSqlValue_str);
+                        }
+
+                        conn.closeAction();
+
+                        string msg = Encoding.UTF8.GetString(buff, 0, nbytes);
+
+                        // 비동기 송신
+                        await stream.WriteAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
+                        serverMainForm.serverMain.logTBox.AppendText(tc.Client.LocalEndPoint + "의 " + msg + " 명령 데이터 처리완료" + "\r\n");
+
+                        defaultSqlValue_df = null;
+                        defaultSqlValue_str = null;
+
+                        nbytes = 0;
+                        if (sql.Contains("EXIT"))
+                        {
+                            Cleanup();
+                        }
+                        
+                    }
+                    
+                    else if(nbytes == 0 && !tc.Connected)
+                    {
+                        Cleanup();
+                    }
+                    
+                    
                 }
-            }
-            catch (Exception e)
-            {
-                serverMainForm.serverMain.logTBox.AppendText(e.ToString() + "\r\n");
+                catch (Exception e)
+                {                    
+                    serverMainForm.serverMain.logTBox.AppendText(e.ToString() + "\r\n");
+                }
             }
         }
 
         public void serverStop()
         {
             listener.Stop();
+            
             serverMainForm.serverMain.logTBox.AppendText("통신 종료\r\n");
 
             // 서버 시작 버튼 재활성화, 서버 종료 버튼 비활성화
@@ -109,17 +171,16 @@ namespace capstone_Server
             serverMainForm.serverMain.UserListButton.Enabled = false;
         }
 
-        public List<string> UserIdSend()
+        public void Cleanup()
         {
-            return userID;
+            userInfo.Remove(userFindIndex);
+            stream.Close();
+            tc.Close();
         }
-        public List<string> UserIPSend()
+
+        public Dictionary<int, string> UserInfoSend()
         {
-            return userIP;
-        }
-        public List<string> UserStatSend()
-        {
-            return userStat;
+            return userInfo;
         }
     }
 
